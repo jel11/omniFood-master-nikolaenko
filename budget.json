@@ -1,0 +1,47 @@
+[
+  {
+    "resourceType": "document",
+    "budget": 20,
+    "comment": "HTML страница не более 20KB"
+  },
+  {
+    "resourceType": "script",
+    "budget": 100,
+    "comment": "JavaScript не более 100KB"
+  },
+  {
+    "resourceType": "stylesheet",
+    "budget": 50,
+    "comment": "CSS не более 50KB"
+  },
+  {
+    "resourceType": "image",
+    "budget": 500,
+    "comment": "Все изображения не более 500KB на странице"
+  },
+  {
+    "resourceType": "font",
+    "budget": 100,
+    "comment": "Шрифты не более 100KB"
+  },
+  {
+    "resourceType": "total",
+    "budget": 800,
+    "comment": "Общий размер страницы не более 800KB"
+  },
+  {
+    "timingType": "first-contentful-paint",
+    "budget": 1800,
+    "comment": "FCP менее 1.8 секунды"
+  },
+  {
+    "timingType": "largest-contentful-paint",
+    "budget": 2500,
+    "comment": "LCP менее 2.5 секунды"
+  },
+  {
+    "timingType": "total-blocking-time",
+    "budget": 200,
+    "comment": "TBT менее 200ms"
+  }
+]

@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="description"
+    content="Omnifood — подписка на еду с ИИ, которая поможет вам снова питаться здорово, 365 дней в году. Подобрана под ваши вкусы и потребности в питании." />
+
+  <!-- Always include this line of code!!! -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- ============================================================ -->
+  <!-- УП 09.03 — День 2: Content Security Policy (защита от XSS)  -->
+  <!-- ============================================================ -->
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self';
+                 script-src 'self' https://unpkg.com 'unsafe-inline';
+                 style-src 'self' https://fonts.googleapis.com 'unsafe-inline';
+                 font-src 'self' https://fonts.gstatic.com;
+                 img-src 'self' data:;
+                 connect-src 'self';">
+
+  <!-- ============================================================ -->
+  <!-- УП 09.03 — День 3: Безопасные HTTP-заголовки (через meta)   -->
+  <!-- ============================================================ -->
+  <meta http-equiv="X-Frame-Options" content="DENY">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+
+  <link rel="icon" href="img/favicon.webp" />
+  <link rel="apple-touch-icon" href="img/apple-touch-icon.webp" />
+  <link rel="manifest" href="manifest.webmanifest" />
+
+  <!-- DNS Prefetch & Preconnect для ускорения внешних ресурсов -->
+  <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+  <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+  <!-- Preload критических ресурсов -->
+  <link rel="preload" href="img/hero.webp" as="image" type="image/webp" />
+
+  <!-- Critical CSS — стили для первого экрана (above-the-fold) -->
+  <style>
+    *{padding:0;margin:0;box-sizing:border-box}
+    html{font-size:62.5%;overflow-x:hidden}
+    body{font-family:"Rubik",sans-serif;line-height:1;font-weight:400;color:#555;overflow-x:hidden}
+    .header{display:flex;justify-content:space-between;align-items:center;background-color:#fdf2e9;padding:0 4.8rem;height:9.6rem;position:relative}
+    .logo{height:2.2rem}
+    .heading-primary{font-weight:700;color:#333;letter-spacing:-.5px;font-size:5.2rem;line-height:1.05;margin-bottom:3.2rem}
+    .hero{max-width:130rem;margin:0 auto;padding:0 3.2rem;display:grid;grid-template-columns:1fr 1fr;gap:9.6rem;align-items:center}
+    .section-hero{background-color:#fdf2e9;padding:4.8rem 0 9.6rem}
+    .hero-img{width:100%}
+    .btn,.btn:link,.btn:visited{display:inline-block;text-decoration:none;font-size:2rem;font-weight:600;padding:1.6rem 3.2rem;border-radius:9px;border:none;cursor:pointer;font-family:inherit;transition:all .3s}
+    .btn--full:link,.btn--full:visited{background-color:#e67e22;color:#fff}
+    .btn--outline:link,.btn--outline:visited{background-color:#fff;color:#555}
+    .margin-right-sm{margin-right:1.6rem!important}
+  </style>
+
+  <!-- Шрифты -->
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Основные стили (non-critical) -->
+  <link rel="preload" href="css/general.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+  <noscript><link rel="stylesheet" href="css/general.css" /></noscript>
+  <link rel="preload" href="css/style.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+  <noscript><link rel="stylesheet" href="css/style.css" /></noscript>
+  <link rel="preload" href="css/queries.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+  <noscript><link rel="stylesheet" href="css/queries.css" /></noscript>
+
+  <!-- Ionicons (модульная загрузка — не блокирует рендеринг) -->
+  <script type="module" defer src="https://unpkg.com/ionicons@5.4.0/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule defer src="https://unpkg.com/ionicons@5.4.0/dist/ionicons/ionicons.js"></script>
+
+  <script defer src="https://unpkg.com/smoothscroll-polyfill@0.4.4/dist/smoothscroll.min.js"></script>
+  <script defer src="js/script.js"></script>
+
+  <title>Omnifood &mdash; Больше никакой готовки!</title>
+</head>
+
+<body>
+  <header class="header">
+    <a href="#">
+      <img class="logo" alt="Omnifood логотип" src="img/omnifood-logo.webp" />
+    </a>
+
+    <nav class="main-nav">
+      <ul class="main-nav-list">
+        <li><a class="main-nav-link" href="#how">Как это работает</a></li>
+        <li><a class="main-nav-link" href="#meals">Блюда</a></li>
+        <li>
+          <a class="main-nav-link" href="#testimonials">Отзывы</a>
+        </li>
+        <li><a class="main-nav-link" href="#pricing">Цены</a></li>
+        <li><a class="main-nav-link nav-cta" href="#cta">Попробовать бесплатно</a></li>
+      </ul>
+    </nav>
+
+    <button class="btn-mobile-nav">
+      <ion-icon class="icon-mobile-nav" name="menu-outline"></ion-icon>
+      <ion-icon class="icon-mobile-nav" name="close-outline"></ion-icon>
+    </button>
+  </header>
+
+  <main>
+    <section class="section-hero">
+      <div class="hero">
+        <div class="hero-text-box">
+          <h1 class="heading-primary">
+            Здоровая еда доставляется к вашей двери каждый день
+          </h1>
+          <p class="hero-description">
+            Умная подписка на еду на 365 дней в году, которая снова научит вас
+            питаться здорово. Подобрана под ваши личные вкусы и потребности в
+            питании.
+          </p>
+          <div class="btn-header-section">
+            <a href="#cta" class="btn btn--full margin-right-sm">Начать питаться правильно</a>
+
+            <a href="#how" class="btn btn--outline">Узнать больше &darr;</a>
+          </div>
+          <div class="delivered-meals">
+            <div class="delivered-imgs">
+              <img src="img/customers/customer-1.webp" alt="Фото клиента" />
+              <img src="img/customers/customer-2.webp" alt="Фото клиента" />
+              <img src="img/customers/customer-3.webp" alt="Фото клиента" />
+              <img src="img/customers/customer-4.webp" alt="Фото клиента" />
+              <img src="img/customers/customer-5.webp" alt="Фото клиента" />
+              <img src="img/customers/customer-6.webp" alt="Фото клиента" />
+            </div>
+            <p class="delivered-text">
+              <span>250 000+</span> блюд доставлено за прошлый год!
+            </p>
+          </div>
+        </div>
+        <div class="hero-img-box">
+          <picture>
+            <source
+              srcset="img/hero-min.webp 600w, img/hero.webp 1200w"
+              sizes="(max-width: 75em) 100vw, 50vw"
+              type="image/webp" />
+
+            <img src="img/hero.webp" class="hero-img"
+              alt="Женщина наслаждается едой, контейнеры с блюдами и тарелки на столе"
+              width="1200" height="800" />
+          </picture>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-featured">
+      <div class="container">
+        <h2 class="heading-featured-in">Нас рекомендуют</h2>
+        <div class="logos">
+          <img src="img/logos/techcrunch.webp" alt="Логотип Techcrunch" />
+          <img src="img/logos/business-insider.webp" alt="Логотип Business Insider" />
+          <img src="img/logos/the-new-york-times.webp" alt="Логотип The New York Times" />
+          <img src="img/logos/forbes.webp" alt="Логотип Forbes" />
+          <img src="img/logos/usa-today.webp" alt="Логотип USA Today" />
+        </div>
+      </div>
+    </section>
+
+    <section class="section-how" id="how">
+      <div class="container">
+        <span class="subheading">Как это работает</span>
+        <h2 class="heading-secondary">
+          Ваша ежедневная доза здоровья в 3 простых шага
+        </h2>
+      </div>
+
+      <div class="container grid grid--2-cols grid--center-v">
+        <!-- STEP 01 -->
+        <div class="step-text-box">
+          <p class="step-number">01</p>
+          <h3 class="heading-tertiary">
+            Расскажите нам, что вам нравится (а что нет)
+          </h3>
+          <p class="step-description">
+            Больше не тратьте время на раздумья о том, что поесть! ИИ Omnifood
+            создаст на 100% персонализированный недельный план питания
+            специально для вас. Он позаботится о том, чтобы вы получали все
+            необходимые питательные вещества и витамины, независимо от диеты!
+          </p>
+        </div>
+
+        <div class="step-img-box">
+          <img src="img/app/app-screen-1.webp" class="step-img" alt="Экран выбора предпочтений в приложении" />
+        </div>
+
+        <!-- STEP 02 -->
+        <div class="step-img-box">
+          <img src="img/app/app-screen-2.webp" class="step-img" alt="Экран одобрения плана питания в приложении" />
+        </div>
+        <div class="step-text-box">
+          <p class="step-number">02</p>
+          <h3 class="heading-tertiary">Утвердите свой еженедельный план питания</h3>
+          <p class="step-description">
+            Раз в неделю утвердите план питания, сгенерированный для вас ИИ
+            Omnifood. Вы можете изменять ингредиенты, заменять целые блюда или
+            даже добавлять свои собственные рецепты.
+          </p>
+        </div>
+
+        <!-- STEP 03 -->
+        <div class="step-text-box">
+          <p class="step-number">03</p>
+          <h3 class="heading-tertiary">Получайте еду в удобное время</h3>
+          <p class="step-description">
+            Лучшие повара города будут готовить ваше выбранное блюдо каждый
+            день, а мы доставим его к вашей двери в удобное для вас время. Вы
+            можете менять расписание доставки и адрес ежедневно!
+          </p>
+        </div>
+        <div class="step-img-box">
+          <img src="img/app/app-screen-3.webp" class="step-img" alt="Экран доставки в приложении" />
+        </div>
+      </div>
+    </section>
+
+    <section class="section-meals" id="meals">
+      <div class="container center-text">
+        <span class="subheading">Блюда</span>
+        <h2 class="heading-secondary">
+          Система OmniFood AI выбирает из более чем 5000 рецептов
+        </h2>
+      </div>
+
+      <div class="container grid grid--3-cols margin-bottom-md">
+        <div class="meal">
+          <img src="img/meals/meal-1.webp" class="meal-img" alt="Японские гёдза" />
+          <div class="meal-content">
+            <div class="meal-tags">
+              <span class="tag tag--vegetarian">Вегетарианское</span>
+            </div>
+            <p class="meal-title">Японские гёдза</p>
+            <ul class="meal-attributes">
+              <li class="meal-attribute">
+                <ion-icon class="meal-icon" name="flame-outline"></ion-icon>
+                <span><strong>650</strong> калорий</span>
+              </li>
+              <li class="meal-attribute">
+                <ion-icon class="meal-icon" name="restaurant-outline"></ion-icon>
+                <span>NutriScore &reg; <strong>74</strong></span>
+              </li>
+              <li class="meal-attribute">
+                <ion-icon class="meal-icon" name="star-outline"></ion-icon>
+                <span><strong>4.9</strong> рейтинг (537)</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="meal">
+          <img src="img/meals/meal-2.webp" class="meal-img" alt="Салат с авокадо" />
+          <div class="meal-content">
+            <div class="meal-tags">
+              <span class="tag tag--vegan">Веганское</span>
+              <span class="tag tag--paleo">Палео</span>
+            </div>
+            <p class="meal-title">Салат с авокадо</p>
+            <ul class="meal-attributes">
+              <li class="meal-attribute">
+                <ion-icon class="meal-icon" name="flame-outline"></ion-icon>
+                <span><strong>400</strong> калорий</span>
+              </li>
+              <li class="meal-attribute">
+                <ion-icon class="meal-icon" name="restaurant-outline"></ion-icon>
+                <span>NutriScore &reg; <strong>92</strong></span>
+              </li>
+              <li class="meal-attribute">
+                <ion-icon class="meal-icon" name="star-outline"></ion-icon>
+                <span><strong>4.8</strong> рейтинг (441)</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="diets">
+          <h3 class="heading-tertiary">Подходит для любой диеты:</h3>
+          <ul class="list">
+            <li class="list-item">
+              <ion-icon class="list-icon" name="checkmark-outline"></ion-icon>
+              <span>Вегетарианская</span>
+            </li>
+            <li class="list-item">
+              <ion-icon class="list-icon" name="checkmark-outline"></ion-icon>
+              <span>Веганская</span>
+            </li>
+            <li class="list-item">
+              <ion-icon class="list-icon" name="checkmark-outline"></ion-icon>
+              <span>Пескетарианская</span>
+            </li>
+            <li class="list-item">
+              <ion-icon class="list-icon" name="checkmark-outline"></ion-icon>
+              <span>Безглютеновая</span>
+            </li>
+            <li class="list-item">
+              <ion-icon class="list-icon" name="checkmark-outline"></ion-icon>
+              <span>Безлактозная</span>
+            </li>
+            <li class="list-item">
+              <ion-icon class="list-icon" name="checkmark-outline"></ion-icon>
+              <span>Кето</span>
+            </li>
+            <li class="list-item">
+              <ion-icon class="list-icon" name="checkmark-outline"></ion-icon>
+              <span>Палео</span>
+            </li>
+            <li class="list-item">
+              <ion-icon class="list-icon" name="checkmark-outline"></ion-icon>
+              <span>Низкий FODMAP</span>
+            </li>
+            <li class="list-item">
+              <ion-icon class="list-icon" name="checkmark-outline"></ion-icon>
+              <span>Детское меню</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="container all-recipes">
+        <a href="#" class="link">Посмотреть все рецепты &rarr;</a>
+      </div>
+    </section>
+
+    <section class="section-testimonials" id="testimonials">
+      <div class="testimonials-container">
+        <span class="subheading">Отзывы</span>
+        <h2 class="heading-secondary">Попробовав однажды, вы уже не сможете вернуться к прежнему</h2>
+
+        <div class="testimonials">
+          <figure class="testimonial">
+            <img class="testimonial-img" alt="Фото клиента Дейва Брайсона" src="img/customers/dave.webp" />
+            <blockquote class="testimonial-text">
+              Недорого, полезно и вкусно — и даже не нужно заказывать вручную!
+              Это действительно волшебно.
+            </blockquote>
+            <p class="testimonial-name">&mdash; Дейв Брайсон</p>
+          </figure>
+
+          <figure class="testimonial">
+            <img class="testimonial-img" alt="Фото клиента Бена Хэдли" src="img/customers/ben.webp" />
+            <blockquote class="testimonial-text">
+              Алгоритм ИИ невероятно хорош, он каждый раз подбирает правильные
+              блюда для меня. Замечательно, что больше не нужно думать о еде!
+            </blockquote>
+            <p class="testimonial-name">&mdash; Бен Хэдли</p>
+          </figure>
+
+          <figure class="testimonial">
+            <img class="testimonial-img" alt="Фото клиента Стива Миллера" src="img/customers/steve.webp" />
+            <blockquote class="testimonial-text">
+              Omnifood — это спасение! Я только что открыл компанию, и на
+              готовку времени нет. Теперь я не представляю жизни без
+              ежедневных блюд!
+            </blockquote>
+            <p class="testimonial-name">&mdash; Стив Миллер</p>
+          </figure>
+
+          <figure class="testimonial">
+            <img class="testimonial-img" alt="Фото клиента Ханны Смит" src="img/customers/hannah.webp" />
+            <blockquote class="testimonial-text">
+              Я подключила Omnifood для всей семьи, и это освобождает столько
+              времени! К тому же всё органическое, веганское и без пластика.
+            </blockquote>
+            <p class="testimonial-name">&mdash; Ханна Смит</p>
+          </figure>
+        </div>
+      </div>
+
+      <div class="gallery">
+        <figure class="gallery-item">
+          <img src="img/gallery/gallery-1.webp" alt="Фото красиво оформленной еды" loading="lazy" />
+        </figure>
+        <figure class="gallery-item">
+          <img src="img/gallery/gallery-2.webp" alt="Фото красиво оформленной еды" loading="lazy" />
+        </figure>
+        <figure class="gallery-item">
+          <img src="img/gallery/gallery-3.webp" alt="Фото красиво оформленной еды" loading="lazy" />
+        </figure>
+        <figure class="gallery-item">
+          <img src="img/gallery/gallery-4.webp" alt="Фото красиво оформленной еды" loading="lazy" />
+        </figure>
+        <figure class="gallery-item">
+          <img src="img/gallery/gallery-5.webp" alt="Фото красиво оформленной еды" loading="lazy" />
+        </figure>
+        <figure class="gallery-item">
+          <img src="img/gallery/gallery-6.webp" alt="Фото красиво оформленной еды" loading="lazy" />
+        </figure>
+        <figure class="gallery-item">
+          <img src="img/gallery/gallery-7.webp" alt="Фото красиво оформленной еды" loading="lazy" />
+        </figure>
+        <figure class="gallery-item">
+          <img src="img/gallery/gallery-8.webp" alt="Фото красиво оформленной еды" loading="lazy" />
+        </figure>
+        <figure class="gallery-item">
+          <img src="img/gallery/gallery-9.webp" alt="Фото красиво оформленной еды" loading="lazy" />
+        </figure>
+        <figure class="gallery-item">
+          <img src="img/gallery/gallery-10.webp" alt="Фото красиво оформленной еды" loading="lazy" />
+        </figure>
+        <figure class="gallery-item">
+          <img src="img/gallery/gallery-11.webp" alt="Фото красиво оформленной еды" loading="lazy" />
+        </figure>
+        <figure class="gallery-item">
+          <img src="img/gallery/gallery-12.webp" alt="Фото красиво оформленной еды" loading="lazy" />
+        </figure>
+      </div>
+    </section>
+
+    <section class="section-pricing" id="pricing">
+      <div class="container">
+        <span class="subheading">Цены</span>
+        <h2 class="heading-secondary">
+          Питаться хорошо, не разоряясь
+        </h2>
+      </div>
+
+      <div class="container grid grid--2-cols margin-bottom-md">
+        <div class="pricing-plan pricing-plan--starter">
+          <header class="plan-header">
+            <p class="plan-name">Стартовый</p>
+            <p class="plan-price"><span>₽</span>3990</p>
+            <p class="plan-text">в месяц. Это всего 133₽ за блюдо!</p>
+          </header>
+          <ul class="list">
+            <li class="list-item">
+              <ion-icon class="list-icon" name="checkmark-outline"></ion-icon>
+              <span>1 блюдо в день</span>
+            </li>
+            <li class="list-item">
+              <ion-icon class="list-icon" name="checkmark-outline"></ion-icon>
+              <span>Заказ с 11:00 до 21:00</span>
+            </li>
+            <li class="list-item">
+              <ion-icon class="list-icon" name="checkmark-outline"></ion-icon>
+              <span>Доставка бесплатно</span>
+            </li>
+            <li class="list-item">
+              <ion-icon class="list-icon" name="close-outline"></ion-icon>
+            </li>
+          </ul>
+          <div class="plan-sing-up">
+            <a href="#" class="btn btn--full">Начать питаться правильно</a>
+          </div>
+        </div>
+
+        <div class="pricing-plan pricing-plan--complete">
+          <header class="plan-header">
+            <p class="plan-name">Полный</p>
+            <p class="plan-price"><span>₽</span>6490</p>
+            <p class="plan-text">в месяц. Это всего 108₽ за блюдо!</p>
+          </header>
+          <ul class="list">
+            <li class="list-item">
+              <ion-icon class="list-icon" name="checkmark-outline"></ion-icon>
+              <span><strong>2 блюда</strong> в день</span>
+            </li>
+            <li class="list-item">
+              <ion-icon class="list-icon" name="checkmark-outline"></ion-icon>
+              <span>Заказ <strong>24/7</strong></span>
+            </li>
+            <li class="list-item">
+              <ion-icon class="list-icon" name="checkmark-outline"></ion-icon>
+              <span>Доставка бесплатно</span>
+            </li>
+            <li class="list-item">
+              <ion-icon class="list-icon" name="checkmark-outline"></ion-icon>
+              <span>Доступ к новейшим рецептам</span>
+            </li>
+          </ul>
+          <div class="plan-sing-up">
+            <a href="#" class="btn btn--full">Начать питаться правильно</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="container grid">
+        <aside class="plan-details">
+          Цены включают все применимые налоги. Вы можете отменить подписку в
+          любое время. Оба плана включают следующее:
+        </aside>
+      </div>
+
+      <div class="container grid grid--4-cols">
+        <div class="feature">
+          <ion-icon class="feature-icon" name="infinite-outline"></ion-icon>
+          <p class="feature-title">Больше никакой готовки!</p>
+          <p class="feature-text">
+            Наша подписка действует 365 дней в году, включая все праздники.
+          </p>
+        </div>
+        <div class="feature">
+          <ion-icon class="feature-icon" name="nutrition-outline"></ion-icon>
+          <p class="feature-title">Местное и органическое</p>
+          <p class="feature-text">
+            Наши повара используют только местные, свежие и органические
+            продукты для приготовления ваших блюд.
+          </p>
+        </div>
+        <div class="feature">
+          <ion-icon class="feature-icon" name="leaf-outline"></ion-icon>
+          <p class="feature-title">Без отходов</p>
+          <p class="feature-text">
+            Все наши партнёры используют только многоразовую тару для упаковки
+            ваших блюд.
+          </p>
+        </div>
+        <div class="feature">
+          <ion-icon class="feature-icon" name="pause-outline"></ion-icon>
+          <p class="feature-title">Пауза в любое время</p>
+          <p class="feature-text">
+            Уезжаете в отпуск? Просто приостановите подписку, и мы вернём
+            деньги за неиспользованные дни.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-cta" id="cta">
+      <div class="container">
+        <div class="cta">
+          <div class="cta-text-box">
+            <h2 class="heading-secondary">Получите первый обед бесплатно!</h2>
+            <p class="cta-text">
+              Здоровые, вкусные и удобные блюда ждут вас. Начните питаться
+              правильно уже сегодня. Вы можете отменить или приостановить
+              подписку в любое время. А первый обед — за наш счёт!
+            </p>
+
+            <form class="cta-form" name="sign-up" netlify>
+              <div>
+                <label for="full-name">Полное имя</label>
+                <!-- УП 09.03 — День 2: валидация — только буквы, пробелы, дефисы -->
+                <input id="full-name" type="text" placeholder="Иван Иванов" name="full-name"
+                  pattern="[A-Za-zА-Яа-яЁё\s\-]{2,50}"
+                  title="Только буквы, пробелы и дефисы (2–50 символов)"
+                  maxlength="50"
+                  required />
+              </div>
+
+              <div>
+                <label for="email">Электронная почта</label>
+                <!-- УП 09.03 — День 2: email-валидация встроена в type="email" -->
+                <input id="email" type="email" placeholder="me@example.com" name="email"
+                  maxlength="100"
+                  required />
+              </div>
+
+              <div>
+                <label for="select-where">Откуда вы о нас узнали?</label>
+                <select id="select-where" name="select-where" required>
+                  <option value="">Пожалуйста, выберите вариант:</option>
+                  <option value="friends">Друзья и семья</option>
+                  <option value="youtube">Видео на YouTube</option>
+                  <option value="podcast">Подкаст</option>
+                  <option value="ad">Реклама в Facebook</option>
+                  <option value="others">Другое</option>
+                </select>
+              </div>
+
+              <button class="btn btn--form">Зарегистрироваться</button>
+            </form>
+          </div>
+          <div class="cta-img-box" role="img" aria-label="Женщина наслаждается едой"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container grid grid--footer">
+      <div class="logo-col">
+        <a href="#" class="footer-logo">
+          <img class="logo" alt="Omnifood логотип" src="img/omnifood-logo.webp" />
+        </a>
+
+        <ul class="social-links">
+          <li>
+            <a class="footer-link" href="#"><ion-icon class="social-icon" name="logo-instagram"></ion-icon></a>
+          </li>
+          <li>
+            <a class="footer-link" href="#"><ion-icon class="social-icon" name="logo-facebook"></ion-icon></a>
+          </li>
+          <li>
+            <a class="footer-link" href="#"><ion-icon class="social-icon" name="logo-twitter"></ion-icon></a>
+          </li>
+        </ul>
+
+        <p class="copyright">
+          Copyright &copy; <span class="year">2027</span> Omnifood, Inc.
+          Все права защищены.
+        </p>
+      </div>
+
+      <div class="address-col">
+        <p class="footer-heading">Контакты</p>
+        <address class="contacts">
+          <p class="address">
+            ул. Харрисон 623, 2-й этаж, Сан-Франциско, CA 94107
+          </p>
+          <p>
+            <a class="footer-link" href="tel:415-201-6370">415-201-6370</a><br />
+            <a class="footer-link" href="mailto:hello@omnifood.com">hello@omnifood.com</a>
+          </p>
+        </address>
+      </div>
+
+      <nav class="nav-col">
+        <p class="footer-heading">Аккаунт</p>
+        <ul class="footer-nav">
+          <li><a class="footer-link" href="#">Создать аккаунт</a></li>
+          <li><a class="footer-link" href="#">Войти</a></li>
+          <li><a class="footer-link" href="#">Приложение iOS</a></li>
+          <li><a class="footer-link" href="#">Приложение Android</a></li>
+        </ul>
+      </nav>
+
+      <nav class="nav-col">
+        <p class="footer-heading">Компания</p>
+        <ul class="footer-nav">
+          <li><a class="footer-link" href="#">О Omnifood</a></li>
+          <li><a class="footer-link" href="#">Для бизнеса</a></li>
+          <li><a class="footer-link" href="#">Партнёры-повара</a></li>
+          <li><a class="footer-link" href="#">Карьера</a></li>
+        </ul>
+      </nav>
+
+      <nav class="nav-col">
+        <p class="footer-heading">Ресурсы</p>
+        <ul class="footer-nav">
+          <li><a class="footer-link" href="#">Каталог рецептов</a></li>
+          <li><a class="footer-link" href="#">Центр помощи</a></li>
+          <li><a class="footer-link" href="#">Конфиденциальность и условия</a></li>
+        </ul>
+      </nav>
+    </div>
+  </footer>
+</body>
+
+</html>

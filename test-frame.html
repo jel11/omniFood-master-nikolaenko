@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>УП 09.03 — День 3: Тест Clickjacking (X-Frame-Options)</title>
+  <style>
+    body { font-family: sans-serif; padding: 2rem; background: #f5f5f5; }
+    h1   { color: #333; }
+    .info { background: #fff3cd; border: 1px solid #ffc107; padding: 1rem; border-radius: 6px; margin-bottom: 1.5rem; }
+    .result { background: #d4edda; border: 1px solid #28a745; padding: 1rem; border-radius: 6px; }
+    iframe { border: 2px solid #e67e22; width: 700px; height: 400px; display: block; margin-top: 1rem; }
+  </style>
+</head>
+<body>
+  <h1>Тест защиты от Clickjacking</h1>
+
+  <div class="info">
+    <strong>Что проверяем:</strong> Попытка встроить сайт Omnifood в &lt;iframe&gt;.<br>
+    Если заголовок <code>X-Frame-Options: DENY</code> работает — фрейм будет пустым
+    или браузер покажет ошибку.
+  </div>
+
+  <p>Попытка загрузить <code>https://localhost:8443</code> во фрейм:</p>
+  <iframe
+    src="https://localhost:8443"
+    title="Тест clickjacking — должен быть пустым"
+  ></iframe>
+
+  <div class="result" style="margin-top:1.5rem;">
+    <strong>Ожидаемый результат:</strong> Фрейм пустой или содержит сообщение
+    об ошибке браузера — это означает, что защита <strong>работает</strong>. ✅
+  </div>
+
+  <!--
+    УП 09.03 — День 3
+    Файл создан для проверки заголовка X-Frame-Options: DENY
+    Проверить в DevTools → Network → Response Headers
+  -->
+</body>
+</html>

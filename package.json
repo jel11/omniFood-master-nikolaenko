@@ -1,0 +1,21 @@
+{
+  "name": "omnifood",
+  "version": "1.0.0",
+  "description": "Omnifood — умная подписка на еду с ИИ. УП 09.02 — оптимизация производительности.",
+  "scripts": {
+    "optimize": "npm run optimize:css && npm run optimize:js",
+    "optimize:css": "cleancss -o css/all.min.css css/general.css css/style.css css/queries.css",
+    "optimize:js": "terser js/script.js -o js/script.min.js --compress --mangle",
+    "build": "npm run optimize && echo Сборка завершена!",
+    "test:performance": "lighthouse http://localhost:8080 --output=html --output-path=./lighthouse-report.html --chrome-flags=\"--headless\"",
+    "serve": "npx serve . -l 8080"
+  },
+  "devDependencies": {
+    "clean-css-cli": "^5.6.3",
+    "terser": "^5.26.0",
+    "lighthouse": "^11.0.0"
+  },
+  "keywords": ["omnifood", "performance", "optimization", "pwa"],
+  "author": "Eremina",
+  "license": "MIT"
+}

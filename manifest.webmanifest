@@ -1,0 +1,27 @@
+{
+  "name": "Omnifood — Больше никакой готовки!",
+  "short_name": "Omnifood",
+  "description": "Умная подписка на еду с ИИ, которая снова научит вас питаться здорово. 365 дней в году.",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#fdf2e9",
+  "theme_color": "#e67e22",
+  "orientation": "portrait-primary",
+  "lang": "ru",
+  "icons": [
+    {
+      "src": "img/favicon-192.webp",
+      "sizes": "192x192",
+      "type": "image/webp",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "img/favicon-512.webp",
+      "sizes": "512x512",
+      "type": "image/webp",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [],
+  "categories": ["food", "lifestyle", "health"]
+}

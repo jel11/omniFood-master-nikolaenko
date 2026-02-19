@@ -1,0 +1,101 @@
+# ============================================================
+# Omnifood — HTTP кэширование и оптимизация сетевых запросов
+# УП 09.02 — День 4: Кэширование и сетевые оптимизации
+# ============================================================
+
+# --- Включение кэширования по типам файлов ---
+<IfModule mod_expires.c>
+    ExpiresActive On
+
+    # Изображения — кэш на 1 год
+    ExpiresByType image/webp         "access plus 1 year"
+    ExpiresByType image/png          "access plus 1 year"
+    ExpiresByType image/jpeg         "access plus 1 year"
+    ExpiresByType image/jpg          "access plus 1 year"
+    ExpiresByType image/gif          "access plus 1 year"
+    ExpiresByType image/svg+xml      "access plus 1 year"
+    ExpiresByType image/x-icon       "access plus 1 year"
+    ExpiresByType image/vnd.microsoft.icon "access plus 1 year"
+
+    # Шрифты — кэш на 1 год
+    ExpiresByType font/woff2         "access plus 1 year"
+    ExpiresByType font/woff          "access plus 1 year"
+    ExpiresByType font/ttf           "access plus 1 year"
+    ExpiresByType application/font-woff2 "access plus 1 year"
+
+    # CSS и JS — кэш на 1 месяц
+    ExpiresByType text/css           "access plus 1 month"
+    ExpiresByType text/javascript    "access plus 1 month"
+    ExpiresByType application/javascript "access plus 1 month"
+
+    # HTML — кэш на 1 час
+    ExpiresByType text/html          "access plus 1 hour"
+
+    # Манифест PWA — кэш на 1 неделю
+    ExpiresByType application/manifest+json "access plus 1 week"
+    ExpiresByType text/cache-manifest "access plus 0 seconds"
+</IfModule>
+
+# --- Cache-Control заголовки ---
+<IfModule mod_headers.c>
+    # Статические ресурсы — долгий кэш
+    <FilesMatch "\.(webp|png|jpg|jpeg|gif|svg|woff2|woff|ttf|ico)$">
+        Header set Cache-Control "public, max-age=31536000, immutable"
+    </FilesMatch>
+
+    # CSS и JS
+    <FilesMatch "\.(css|js)$">
+        Header set Cache-Control "public, max-age=2592000"
+    </FilesMatch>
+
+    # HTML — короткий кэш
+    <FilesMatch "\.html$">
+        Header set Cache-Control "public, max-age=3600, must-revalidate"
+    </FilesMatch>
+</IfModule>
+
+# --- Сжатие Gzip ---
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html
+    AddOutputFilterByType DEFLATE text/css
+    AddOutputFilterByType DEFLATE text/javascript
+    AddOutputFilterByType DEFLATE application/javascript
+    AddOutputFilterByType DEFLATE application/json
+    AddOutputFilterByType DEFLATE image/svg+xml
+    AddOutputFilterByType DEFLATE font/woff2
+    AddOutputFilterByType DEFLATE font/woff
+</IfModule>
+
+# --- Keep-Alive ---
+<IfModule mod_headers.c>
+    Header set Connection keep-alive
+</IfModule>
+
+# ============================================================
+# УП 09.03 — День 3: Безопасные HTTP-заголовки
+# ============================================================
+<IfModule mod_headers.c>
+    # Защита от Clickjacking — запрет встраивания в iframe
+    Header always set X-Frame-Options "DENY"
+
+    # Защита от MIME sniffing — браузер не угадывает тип файла
+    Header always set X-Content-Type-Options "nosniff"
+
+    # Контроль Referer — не раскрываем полный URL при переходах
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+
+    # Защита от XSS в старых браузерах (Internet Explorer / Edge Legacy)
+    Header always set X-XSS-Protection "1; mode=block"
+
+    # Разрешаем встраивать только свои ресурсы
+    Header always set X-Permitted-Cross-Domain-Policies "none"
+</IfModule>
+
+# ============================================================
+# УП 09.03 — День 1: Принудительный редирект HTTP → HTTPS
+# ============================================================
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{HTTPS} off
+    RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+</IfModule>

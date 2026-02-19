@@ -1,0 +1,99 @@
+# ============================================================
+# Omnifood — CI/CD Pipeline для проверки производительности
+# УП 09.02 — День 5: Мониторинг, деплой и автоматизация
+# ============================================================
+
+name: Performance Optimization Check
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  test-performance:
+    name: Lighthouse Performance Audit
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout репозитория
+        uses: actions/checkout@v3
+
+      - name: Установка Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+
+      - name: Установка зависимостей
+        run: |
+          cd OmniFood
+          npm install
+        working-directory: ${{ github.workspace }}
+
+      - name: Запуск локального сервера
+        run: |
+          cd OmniFood
+          npx serve . -l 8080 &
+          sleep 3
+
+      - name: Запуск Lighthouse аудита
+        uses: foo-software/lighthouse-check-action@master
+        with:
+          urls: "http://localhost:8080"
+          outputDirectory: "./lighthouse-reports"
+          verbose: true
+          minScorePerformance: 80
+          minScoreAccessibility: 80
+          minScoreBestPractices: 80
+          minScoreSeo: 80
+
+      - name: Загрузка отчёта Lighthouse
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: lighthouse-report
+          path: ./lighthouse-reports
+          retention-days: 30
+
+  check-budget:
+    name: Performance Budget Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout репозитория
+        uses: actions/checkout@v3
+
+      - name: Проверка размеров файлов
+        run: |
+          echo "=== Размеры файлов OmniFood ==="
+          echo "--- HTML ---"
+          wc -c OmniFood/index.html
+          echo "--- CSS ---"
+          wc -c OmniFood/css/*.css
+          echo "--- JS ---"
+          wc -c OmniFood/js/*.js
+          echo "--- Изображения (hero) ---"
+          ls -la OmniFood/img/hero*.webp 2>/dev/null || echo "Hero изображения не найдены"
+          echo "=== Итого ==="
+          du -sh OmniFood/
+
+      - name: Проверка наличия обязательных файлов
+        run: |
+          echo "Проверка обязательных файлов оптимизации..."
+          files=(
+            "OmniFood/index.html"
+            "OmniFood/sw.js"
+            "OmniFood/manifest.webmanifest"
+            "OmniFood/.htaccess"
+            "OmniFood/budget.json"
+          )
+          for f in "${files[@]}"; do
+            if [ -f "$f" ]; then
+              echo "✅ $f — найден"
+            else
+              echo "❌ $f — ОТСУТСТВУЕТ"
+              exit 1
+            fi
+          done
+          echo "Все обязательные файлы найдены!"
